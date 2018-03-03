@@ -48,7 +48,7 @@ public class AddEventTask {
 	private JRadioButton rdbtnTask;
 	private JRadioButton rdbtnEvent;
 	private JButton btnCancel;
-	private JComboBox<String> cmbStart;
+	private JComboBox<?> cmbStart;
 	private JComboBox<?> cmbEnd;
 	private JRadioButton rbtnGenEvents;
 	private JRadioButton rbtnGenTask;
@@ -197,11 +197,11 @@ public class AddEventTask {
 
 
  
-        cmbStart= new JComboBox();
+        cmbStart= new JComboBox(times.toArray());
         
 		cmbStart.setBounds(208, 134, 97, 28);
 		pnlAddEvent.add(cmbStart);
-		cmbEnd = new JComboBox();
+		cmbEnd = new JComboBox(times.toArray());
 		cmbEnd.setBounds(361, 134, 97, 28);
 		pnlAddEvent.add(cmbEnd);
 		
