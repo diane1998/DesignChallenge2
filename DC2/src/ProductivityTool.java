@@ -28,7 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
-public class AddEventTask {
+public class ProductivityTool {
 
 	private JFrame frame;
 	private JTextField txtName;
@@ -60,7 +60,7 @@ public class AddEventTask {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AddEventTask window = new AddEventTask();
+					ProductivityTool window = new ProductivityTool();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -72,7 +72,7 @@ public class AddEventTask {
 	/**
 	 * Create the application.
 	 */
-	public AddEventTask() {
+	public ProductivityTool() {
 		initialize();
 	}
 
@@ -159,11 +159,24 @@ public class AddEventTask {
 		txtName.setColumns(10);
 		
 		rdbtnTask = new JRadioButton("Task");
+		rdbtnTask.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtnEvent.isSelected())
+					rdbtnEvent.setSelected(false);
+			}
+		});
 		rdbtnTask.setFont(new Font("Verdana", Font.PLAIN, 17));
 		rdbtnTask.setBounds(54, 83, 112, 25);
 		pnlAddEvent.add(rdbtnTask);
 		
 		rdbtnEvent = new JRadioButton("Event");
+		rdbtnEvent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtnTask.isSelected())
+					rdbtnTask.setSelected(false);
+				
+			}
+		});
 		rdbtnEvent.setFont(new Font("Verdana", Font.PLAIN, 17));
 		rdbtnEvent.setBounds(193, 83, 112, 25);
 		pnlAddEvent.add(rdbtnEvent);
@@ -220,12 +233,24 @@ public class AddEventTask {
 		panel_3.add(dateChooser_1);
 		
 		rbtnGenEvents = new JRadioButton("Events");
+		rbtnGenEvents.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(rbtnGenTask.isSelected())
+					rbtnGenTask.setSelected(false);
+			}
+		});
 		rbtnGenEvents.setBounds(12, 87, 99, 25);
 		panel_3.add(rbtnGenEvents);
 		rbtnGenEvents.setForeground(new Color(0, 102, 153));
 		rbtnGenEvents.setFont(new Font("Verdana", Font.BOLD, 17));
 		
 		rbtnGenTask = new JRadioButton("Tasks");
+		rbtnGenTask.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rbtnGenEvents.isSelected())
+					rbtnGenEvents.setSelected(false);
+			}
+		});
 		rbtnGenTask.setBounds(12, 119, 88, 25);
 		panel_3.add(rbtnGenTask);
 		rbtnGenTask.setForeground(new Color(0, 153, 51));
