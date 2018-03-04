@@ -17,8 +17,14 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 import javax.swing.JRadioButton;
 import java.awt.Font;
 import javax.swing.JLabel;
@@ -34,16 +40,13 @@ public class ProductivityTool {
 	private JTextField txtName;
 	private JDateChooser addDateChooser;
 	private GregorianCalendar date;
-	private JTable table;
+	private JTable DayTable;
 	private JTabbedPane tabbedPane;
 	private JPanel Day;
-	private JScrollPane scrollPane;
 	private JPanel panel;
 	private JPanel panel_2;
 	private JTextArea textArea;
 	private JPanel panel_1;
-	private JTable table_1;
-	private JTable table_2;
 	private JButton btnSave;
 	private JRadioButton rdbtnTask;
 	private JRadioButton rdbtnEvent;
@@ -53,6 +56,9 @@ public class ProductivityTool {
 	private JRadioButton rbtnGenEvents;
 	private JRadioButton rbtnGenTask;
 	private JDateChooser dateChooser_1; 
+	private JTable weeklyTable;
+	private DefaultTableModel dayModel;
+	private DefaultTableModel weeklyModel;
 	/**
 	 * Launch the application.
 	 */
@@ -80,6 +86,17 @@ public class ProductivityTool {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+	      int gapInMinutes =  30 ;  // Define your span-of-time.
+	        int loops = ( (int) Duration.ofHours( 24 ).toMinutes() / gapInMinutes ) ;
+	        List<LocalTime> times = new ArrayList<>( loops ) ;
+
+	        LocalTime time = LocalTime.MIN ;  // '00:00'
+	        for( int i = 1 ; i <= loops ; i ++ ) {
+	            times.add( time ) ;
+	            // Set up next loop.
+	            time = time.plusMinutes( gapInMinutes ) ;
+	        }
+
 		date= new GregorianCalendar();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 752, 465);
@@ -94,29 +111,60 @@ public class ProductivityTool {
 		tabbedPane.addTab("Day", null, Day, null);
 		Day.setLayout(null);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(39, 29, 443, 262);
-		Day.add(scrollPane);
 		
-		panel = new JPanel();
-		panel.setLayout(null);
-		scrollPane.setViewportView(panel);
+	
 		
-		table = new JTable();
-		table.setBounds(0, 0, 440, 260);
-		panel.add(table);
+//	      TableModel dataModel = new AbstractTableModel() {
+//	          public int getColumnCount() { return 2; }
+//	          public int getRowCount() { return 48;}
+//	          public Object getValueAt(int row, int col) {
+//	        	  if(col==0)
+//	        		  return times.get(row).toString();
+//	        	  else
+//	        		  return "";
+//	        	  }
+//	          public void setColumnIdentifiers(new Object[] {
+//	                  "Column 1", "Column 2", "Column 3" });
+//	      };
+		
+		 dayModel = new DefaultTableModel();
+		 dayModel.setColumnIdentifiers(new Object[] {
+				 "Time", "Name", });
+		 
+		 
+		
+		DayTable = new JTable(dayModel);
+		 for (int count = 0; count < 48; count++){
+	            dayModel.insertRow(count, new Object[] { times.get(count).toString(), ""});
+	    
+	        }	
+		  	DayTable.getColumnModel().getColumn(0).setMaxWidth(70);;
+	
+	        DayTable.setRowHeight( 30);
+	        DayTable.setBounds(0, 0, 440, 260);
+	
+//		for(int i=0;i<48;i++) {
+//			DayTable.setValueAt(times.get(i).toString(), i, 0);
+//		}
+//		
+	
+		
+		JScrollPane dayScrollpane = new JScrollPane(DayTable);
+		dayScrollpane.setBounds(39, 29, 443, 262);
+		Day.add(dayScrollpane);
+		
+	
 		
 		panel_2 = new JPanel();
 		tabbedPane.addTab("Weekly", null, panel_2, null);
 		panel_2.setLayout(null);
 		
-		table_1 = new JTable();
-		table_1.setBounds(257, 5, 0, 0);
-		panel_2.add(table_1);
+		JScrollPane scrollPane = new JScrollPane(weeklyTable);
+		scrollPane.setBounds(40, 25, 452, 276);
+		panel_2.add(scrollPane);
 		
-		table_2 = new JTable();
-		table_2.setBounds(40, 29, 440, 260);
-		panel_2.add(table_2);
+		weeklyTable = new JTable();
+		scrollPane.setViewportView(weeklyTable);
 		
 		panel_1 = new JPanel();
 		tabbedPane.addTab("Agenda", null, panel_1, null);
@@ -197,17 +245,7 @@ public class ProductivityTool {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         
-        int gapInMinutes =  30 ;  // Define your span-of-time.
-        int loops = ( (int) Duration.ofHours( 24 ).toMinutes() / gapInMinutes ) ;
-        List<LocalTime> times = new ArrayList<>( loops ) ;
-
-        LocalTime time = LocalTime.MIN ;  // '00:00'
-        for( int i = 1 ; i <= loops ; i ++ ) {
-            times.add( time ) ;
-            // Set up next loop.
-            time = time.plusMinutes( gapInMinutes ) ;
-        }
-
+  
 
  
         cmbStart= new JComboBox(times.toArray());
