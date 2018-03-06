@@ -1,26 +1,28 @@
 package Model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class EventConnection {
+public class PlanConnection extends SqlReader{
 	private SchedDb connection;
 	
-	public EventConnection(SchedDb  schedDb) {
+	public PlanConnection(SchedDb  schedDb) { 
 		connection=schedDb;
 	}
 	
-	public List<Event> getAll() {
+	public void  readAll() {
 		// create empty list of contacts
 		List<Event> Events = new ArrayList<Event>();
-
+		List<Task> Tasks = new ArrayList<Task>();
 		// get connection from db
 		Connection cnt = connection.getConnection();
 
@@ -37,7 +39,10 @@ public class EventConnection {
 			// transform set to list
 			// rs.next() means get next in result set
 			while (rs.next()) {
-				Events.add(toEvent(rs));
+				if(toObject(rs).getColor()==1)
+					Events.add(toObject(rs));
+				else if(toObject(rs).getColor()==2)
+					Tasks.add(toTask(rs));
 			}
 
 			// close all the resources
@@ -50,18 +55,22 @@ public class EventConnection {
 			System.out.println("[Event] SELECT FAILED!");
 			e.printStackTrace();
 		}
-
+			events=(ArrayList<Event>) Events;
+			tasks=(ArrayList<Task>) Tasks;
 		// return list
-		return Events;
 	}
 	
+	private Task toTask(ResultSet rs) throws SQLException {
+		Task task = new Task(rs.getInt(Task.COL_ID),rs.getString(Task.COL_NAME),rs.getDate(Task.COL_DATE),rs.getTime(Task.COL_START),rs.getBoolean(Task.COL_COMPLETED),rs.getBoolean(Task.COL_DELETED),rs.getInt(Task.COL_COLOR));
+		return task;
+	}
 
-	private Event toEvent(ResultSet rs) throws SQLException {
-		Event event = new Event(rs.getInt(Event.COL_ID),rs.getString(Event.COL_NAME),rs.getDate(Event.COL_DATE),rs.getTime(Event.COL_START),rs.getTime(Event.COL_END),rs.getBoolean(Event.COL_COMPLETED),rs.getBoolean(Event.COL_DELETED));
+	private Event toObject(ResultSet rs) throws SQLException {
+		Event event = new Event(rs.getInt(Event.COL_ID),rs.getString(Event.COL_NAME),rs.getDate(Event.COL_DATE),rs.getTime(Event.COL_START),rs.getTime(Event.COL_END),rs.getBoolean(Event.COL_COMPLETED),rs.getBoolean(Event.COL_DELETED),rs.getInt(Task.COL_COLOR));
 		return event;
 	}
 	
-	public boolean addEvent(Event Event) {
+	public boolean add(Object o) {
 		// get connection from db
 		Connection cnt = connection.getConnection();
 
@@ -73,14 +82,25 @@ public class EventConnection {
 			PreparedStatement ps = cnt.prepareStatement(query);
 
 			// prepare the values
-			ps.setInt(1, Types.NULL); // because id is auto-increment anyway
-			ps.setString(2, Event.getName());
-			ps.setDate(3, Event.getDate());
-			ps.setTime(4, Event.getStart());
-			ps.setTime(5, Event.getEnd());
-			ps.setBoolean(6, Event.isCompleted());
-			ps.setBoolean(7, Event.isDeleted());
-	
+//			if(((Event) o).getColor()==1){
+				ps.setInt(1, Types.NULL); // because id is auto-increment anyway
+				ps.setString(2, ((Event) o).getName());
+				ps.setDate(3, ((Event) o).getDate());
+				ps.setTime(4, ((Event) o).getStart());
+				ps.setTime(5, ((Event) o).getEnd());
+				ps.setBoolean(6, ((Event) o).isCompleted());
+				ps.setBoolean(7, ((Event) o).isDeleted());
+				ps.setInt(8,((Event) o).getColor());
+//			}else if(((Event) o).getColor()==2) {
+//				ps.setInt(1, Types.NULL); // because id is auto-increment anyway
+//				ps.setString(2, ((Task) o).getName());
+//				ps.setDate(3, ((Task) o).getDate());
+//				ps.setTime(4, ((Task) o).getStart());
+//				ps.setTime(5, ((Task) o).getEnd());
+//				ps.setBoolean(6, ((Task) o).isCompleted());
+//				ps.setBoolean(7, ((Task) o).isDeleted());
+//				ps.setInt(8, ((Task) o).getColor());
+//			}
 
 			// execute the update
 			ps.executeUpdate();
@@ -97,14 +117,14 @@ public class EventConnection {
 		}
 	}
 	
-	public void updateEvent(Event Event) {
+	public void update(Object o) {
 		// get connection from db
 		Connection cnt = connection.getConnection();
 
 		// create a query
 		String query = "UPDATE " + Event.TABLE + " SET " + Event.COL_NAME + " = ?," + Event.COL_DATE
 				+ " = ?," + Event.COL_START + " = ?," + Event.COL_END + " = ?," + Event.COL_COMPLETED
-				+ " = ?," + Event.COL_DELETED + " = ?" + " WHERE "
+				+ " = ?," + Event.COL_DELETED + " = ?" + Event.COL_COLOR + " = ?" + " WHERE "
 				+ Event.COL_ID + " = ?";
 
 		try {
@@ -112,14 +132,14 @@ public class EventConnection {
 			PreparedStatement ps = cnt.prepareStatement(query);
 
 			// prepare the values
-			ps.setInt(7, Event.getId()); // because id is auto-increment anyway
-			ps.setString(1, Event.getName());
-			ps.setDate(2, Event.getDate());
-			ps.setTime(3, Event.getStart());
-			ps.setTime(4, Event.getEnd());
-			ps.setBoolean(5, Event.isCompleted());
-			ps.setBoolean(6, Event.isDeleted());
-
+			ps.setInt(8, ((Event) o).getId()); // because id is auto-increment anyway
+			ps.setString(1, ((Event) o).getName());
+			ps.setDate(2, ((Event) o).getDate());
+			ps.setTime(3, ((Event) o).getStart());
+			ps.setTime(4, ((Event) o).getEnd());
+			ps.setBoolean(5, ((Event) o).isCompleted());
+			ps.setBoolean(6, ((Event) o).isDeleted());
+			ps.setInt(7, ((Event) o).getColor());
 			// execute the update
 			ps.executeUpdate();
 
@@ -133,7 +153,7 @@ public class EventConnection {
 		}
 	}
 	
-	public void deleteEvent(int id) {
+	public void delete(int id) {
 		// get connection from db
 		Connection cnt = connection.getConnection();
 
@@ -160,7 +180,7 @@ public class EventConnection {
 		}
 	}
 	
-	public Event getEvent(int id) {
+	public Event getObject(int id) {
 		Event event = null ;
 
 		// get connection from db
@@ -179,7 +199,7 @@ public class EventConnection {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				event = toEvent(rs);
+				event = toObject(rs);
 			}
 
 			// close all the resources
@@ -197,16 +217,27 @@ public class EventConnection {
 		return event;
 	}
 	
-	public static void main(String[] args) {
-		EventConnection service = new EventConnection(new SchedDb());
-		List<Event> Events = service.getAll();
-		Event Event = service.getEvent(1);
+//	public static void main(String[] args) {
+//		PlanConnection service = new PlanConnection(new SchedDb());
+//			 service.readAll();
+//		 ArrayList<Event> events = service.getEvents();
+//		 ArrayList<Task> tasks = service.getTasks();
+////		Event Event = service.getEvent(1);
+//
+//		for (Event r : events) {
+//			r.ToString();
+//			System.out.println("");
+//		}
+//		
+//		for (Task t : tasks) {
+//			t.ToString();
+//			System.out.println("");
+//		}
+//	
+////		Event.ToString();
+//	}
 
-		for (Event r : Events) {
-			r.ToString();
-			System.out.println("");
-		}
-		Event.ToString();
-	}
-	
+
+
+
 }

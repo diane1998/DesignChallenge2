@@ -10,7 +10,7 @@ public class SchedDb {
 	private static String DRIVER_NAME = "com.mysql.jdbc.Driver";
 	private static String URL = "jdbc:mysql://127.0.0.1:3306/";
 	private static String USERNAME = "root";
-	private static String PASSWORD = "1234";
+	private static String PASSWORD = "root";
 	private static String DATABASE = "productivity";
 	
 	public Connection getConnection() {
@@ -18,7 +18,7 @@ public class SchedDb {
 			Class.forName(DRIVER_NAME);
 			Connection connection = DriverManager.getConnection(
 					URL +
-					DATABASE + "?autoReconnect=true&useSSL=false",
+					DATABASE + "?autoReconnect=true&useSSL=false", 
 					USERNAME,
 					PASSWORD);
 			System.out.println("[MYSQL] Connection successful");

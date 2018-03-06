@@ -2,6 +2,9 @@ package Model;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.GregorianCalendar;
+
+import sun.util.calendar.Gregorian;
 
 
 public class Event {
@@ -12,8 +15,9 @@ public class Event {
 	private Time end;
 	private boolean completed;
 	private boolean deleted;
+	private int color;
 	
-	public static final String TABLE = "eventdb";
+	public static final String TABLE = "plandb";
 	public static final String COL_ID = TABLE + ".id";
 	public static final String COL_NAME = TABLE + ".name";
 	public static final String COL_DATE = TABLE + ".date";
@@ -21,7 +25,7 @@ public class Event {
 	public static final String COL_END = TABLE + ".end";
 	public static final String COL_COMPLETED = TABLE + ".completed";
 	public static final String COL_DELETED = TABLE + ".deleted";
-
+	public static final String COL_COLOR = TABLE + ".color";
 //	public Event()
 //	{
 //		this.name= "";
@@ -31,8 +35,12 @@ public class Event {
 //		this.year=1;
 //
 //	}
+	public Event()
+	{
+		
+	}
 	
-	public Event(int id,String name,Date date,Time start,Time end,boolean completed,boolean deleted)
+	public Event(int id,String name,Date date,Time start,Time end,boolean completed,boolean deleted,int color)
 	{
 		this.id=id;
 		this.name= name;
@@ -41,6 +49,7 @@ public class Event {
 		this.end=end;
 		this.completed=completed;
 		this.deleted=deleted;
+		this.color=color;
 		
 
 	}
@@ -49,9 +58,6 @@ public class Event {
 		return date;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
 
 	public Time getStart() {
 		return start;
@@ -121,6 +127,23 @@ public class Event {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+	}
+
+//	@SuppressWarnings("deprecation")
+	public void setDate(java.util.Date date2) {
+		// TODO Auto-generated method stub
+//		GregorianCalendar cal = new GregorianCalendar();
+//		cal.setTime(date2);
+		this.date=new java.sql.Date(date2.getTime());
+	
 	}
 
 
