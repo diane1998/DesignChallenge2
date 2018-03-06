@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="DC2/src"/>
+	<classpathentry excluding="DC2/src/" kind="src" path=""/>
+	<classpathentry kind="lib" path="DC2/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="DC2/jgoodies-common-1.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="DC2/jgoodies-common-1.8.0.jar"/>
+	<classpathentry kind="lib" path="DC2/jgoodies-forms-1.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="DC2/jgoodies-forms-1.8.0.jar"/>
+	<classpathentry kind="lib" path="mysql-connector-java-5.1.45-bin.jar"/>
+	<classpathentry kind="output" path="DC2/bin"/>
+</classpath>

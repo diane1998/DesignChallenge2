@@ -10,14 +10,14 @@ import java.util.List;
 
 
 
-public class EventConnection {
+public class EventConnection extends SqlReader{
 	private SchedDb connection;
 	
 	public EventConnection(SchedDb  schedDb) {
 		connection=schedDb;
 	}
 	
-	public List<Event> getAll() {
+	public void  ReadAll() {
 		// create empty list of contacts
 		List<Event> Events = new ArrayList<Event>();
 
@@ -37,7 +37,7 @@ public class EventConnection {
 			// transform set to list
 			// rs.next() means get next in result set
 			while (rs.next()) {
-				Events.add(toEvent(rs));
+				Events.add(toObject(rs));
 			}
 
 			// close all the resources
@@ -50,13 +50,12 @@ public class EventConnection {
 			System.out.println("[Event] SELECT FAILED!");
 			e.printStackTrace();
 		}
-
+			events=(ArrayList<Event>) Events;
 		// return list
-		return Events;
 	}
 	
 
-	private Event toEvent(ResultSet rs) throws SQLException {
+	private Event toObject(ResultSet rs) throws SQLException {
 		Event event = new Event(rs.getInt(Event.COL_ID),rs.getString(Event.COL_NAME),rs.getDate(Event.COL_DATE),rs.getTime(Event.COL_START),rs.getTime(Event.COL_END),rs.getBoolean(Event.COL_COMPLETED),rs.getBoolean(Event.COL_DELETED));
 		return event;
 	}
@@ -179,7 +178,7 @@ public class EventConnection {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				event = toEvent(rs);
+				event = toObject(rs);
 			}
 
 			// close all the resources
@@ -199,14 +198,38 @@ public class EventConnection {
 	
 	public static void main(String[] args) {
 		EventConnection service = new EventConnection(new SchedDb());
-		List<Event> Events = service.getAll();
-		Event Event = service.getEvent(1);
-
-		for (Event r : Events) {
+		 service.ReadAll();
+		 ArrayList<Event> events = service.getEvents();
+		
+//		Event Event = service.getEvent(1);
+//
+		for (Event r : events) {
 			r.ToString();
 			System.out.println("");
 		}
-		Event.ToString();
+//		Event.ToString();
 	}
+
+
+
+	@Override
+	public void Add() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Delete() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	
 }
