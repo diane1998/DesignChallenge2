@@ -3,7 +3,7 @@ package Model;
 import View.ProductivityToolView;
 
 public class ProductivityToolModel {
-
+	private ProductivityToolView view = new ProductivityToolView();
 	SchedDb sdb = new SchedDb();
 	private PlanConnection  plan = new PlanConnection(sdb); 
 	
@@ -15,7 +15,7 @@ public class ProductivityToolModel {
 		this.plan = plan;
 	}
 
-	private ProductivityToolView view = new ProductivityToolView();
+	
 	
 	
 	public ProductivityToolModel(ProductivityToolView view) {

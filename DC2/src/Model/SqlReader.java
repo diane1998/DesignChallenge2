@@ -8,6 +8,7 @@ public abstract class SqlReader  {
 	
 	public ArrayList <Event> getEvents() {
         return events;
+
         
     }
 	
@@ -22,7 +23,7 @@ public abstract class SqlReader  {
 	abstract public void update(Object j);
 	abstract public void delete(int i);
 
-	
+
 }
 //public abstract class EventReader {
 //
